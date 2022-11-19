@@ -3,6 +3,7 @@
 \usepackage[english]{babel}
 \usepackage[letterpaper,top=2cm,bottom=2cm,left=3cm,right=3cm,marginparwidth=1.75cm]{geometry}
 \usepackage{amsmath}
+\usepackage{amsfonts} 
 \usepackage{graphicx}
 \usepackage[colorlinks=true, allcolors=blue]{hyperref}
 \graphicspath{{images/}}
@@ -10,10 +11,9 @@
 \setcounter{secnumdepth}{4}
 
 
-\title{LaTeX Template}
+\title{Properties of relations on a set determined by a matrix}
 
-\author{Mr Ashlin Darius Govindasamy\\ \large{ADGSTUDIOS}}
-
+\author{Mr Ashlin Darius Govindasamy\\ \large{University of South Africa} \\ \large{Department of Computer Science and Mathematics}}
 \date{\today}
 
 
@@ -21,14 +21,23 @@
 \maketitle
 \newpage
 
+\begin{abstract}
+This paper introduces a technique of converting a relation set into a matrix of $\mathbb{R}^{n}$ space using that matrix classifying the properties for the relational set.
+Using this technique, we can find the properties of a relation set by using some properties of the matrix. In programming, we can use this technique to determine our properties of a relation set by using the matrix. Code snippets are provided to show how this technique can be used in programming.
+\end{abstract}
+
+\newpage
 \tableofcontents
 
 %for adding page numbers
 \pagenumbering{arabic} 
 
+
 %add more chapters like this
-\chapter{Introduction}
-\input{chapters/introduction.tex}
+\chapter{Relations}
+\input{chapters/relations.tex}
+
+\chapter{Finding the properties of a relation set}
 
 \newpage
 
