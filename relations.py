@@ -51,35 +51,22 @@ class Relations():
         return False
 
     def isTrichotomy(self):
-        #every pair of nodes has one and only one edge between them.        
-        # get all the edges 
-        edges = self.R
-        # make sure that there are no duplicate edges
-        for i in range(len(edges)):
-            for j in range(len(edges)):
-                if edges[i][0] == edges[j][1] and edges[i][1] == edges[j][0]:
-                    return False
-        # make sure that there are no edges that are not in the relation                    
-        for i in range(len(self.M)):
-            for j in range(len(self.M)):
-                if self.M[i][j] == 0:
-                    for k in range(len(edges)):
-                        if edges[k][0] == i+1 and edges[k][1] == j+1:
-                            return False
-                
-        # each node can only have two edges
+        #every pair of nodes has one and only one edge between them.                 
+        # each node can only have two edges but if the edge as the node as the source and destination, then it is ok
         for i in range(len(self.M)):
             count = 0
             for j in range(len(self.M)):
                 if self.M[i][j] == 1:
-                    count += 1
+                    # if the edge is from the node to itself, then it is ok
+                    if i == j:
+                        continue
+                    else:
+                        count += 1
             if count > 2:
                 return False
-                      
         # must be asymmetric
         if self.isSymmetric():
-            return False
-            
+            return False            
         return True
 
     def EquivalenceRelation(self):
