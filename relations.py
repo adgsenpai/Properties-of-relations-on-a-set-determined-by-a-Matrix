@@ -51,8 +51,10 @@ class Relations():
         return False
 
     def isTrichotomy(self):
-        #every pair of nodes has one and only one edge between them.                 
-        # each node can only have two edges but if the edge as the node as the source and destination, then it is ok
+        # every pair of nodes has one and only one edge between them.                 
+        # each node can only have two edges but 
+        # if the edge as the node as the source and destination
+        # , then it is ok
         for i in range(len(self.M)):
             count = 0
             for j in range(len(self.M)):

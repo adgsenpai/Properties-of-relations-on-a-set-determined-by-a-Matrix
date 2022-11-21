@@ -411,8 +411,10 @@ If you notice the relation is trichotomous the relation $R$ is asymmetric and ed
 In our psuedocode we can see that we are checking if the relation is trichotomous. \\
 \begin{lstlisting}
     def isTrichotomy(self):
-        #every pair of nodes has one and only one edge between them.                 
-        # each node can only have two edges but if the edge as the node as the source and destination, then it is ok
+        # every pair of nodes has one and only one edge between them.                 
+        # each node can only have two edges but 
+        # if the edge as the node as the source and destination
+        # Then it is ok
         for i in range(len(self.M)):
             count = 0
             for j in range(len(self.M)):
