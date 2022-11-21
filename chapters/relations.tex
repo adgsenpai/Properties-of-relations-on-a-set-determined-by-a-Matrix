@@ -368,7 +368,81 @@ def transitive(R):
     else:
         return False
 \end{lstlisting}
+
+\subsubsection{Trichotomy}
+In mathematics, the law of trichotomy states that every real number is either positive, negative, or zero.
+
+More generally, a binary relation R on a set X is trichotomous if for all x and y in X, exactly one of xRy, yRx and x=y holds. Writing R as $<$, this is stated in formal logic as: \\
+
+\begin{math}
+\forall x \in X \, \forall y \in X \, (
+  [       x < y  \, \land \, \lnot(y < x) \, \land \, \lnot(x = y) ] \, \lor \,
+  [ \lnot(x < y) \, \land \,       y < x  \, \land \, \lnot(x = y) ] \, \lor \,
+  [ \lnot(x < y) \, \land \, \lnot(y < x) \, \land \,       x = y  ]
+) \
+\end{math} \\
     
+A relation is trichotomous if, and only if, it is asymmetric and connected.
+If a trichotomous relation is also transitive, then it is a strict total order; this is a special case of a strict weak order.
+
+In a much easier to understand way. \\
+For example, the relation $R$ on $A$ is trichotomous. \\
+
+$R = {(1,1),(1,2),(1,3),(2,3)}$ \\ 
+
+$R = \begin{bmatrix}
+    1 & 1 & 1 \\
+    0 & 0 & 1 \\
+    0 & 0 & 0 \\
+\end{bmatrix}$ \\
+
+\begin{tikzpicture}[node distance={15mm}, thick, main/.style = {draw, circle}]
+    \node[main] (1) {$1$}; 
+    \node[main, right of=1] (2) {$2$};
+    \node[main, below of=1] (3) {$3$};
+    \draw[->] (1) [out=90,in=135,looseness=5] to (1);
+    \draw[->] (1) to (2);
+    \draw[->] (1) to (3);
+    \draw[->] (2) to (3);
+\end{tikzpicture} \\
+
+If you notice the relation is trichotomous the relation $R$ is asymmetric and edges are connected only once.
+
+In our psuedocode we can see that we are checking if the relation is trichotomous. \\
+\begin{lstlisting}
+    def isTrichotomy(self):
+        #every pair of nodes has one and only one edge between them.        
+        # get all the edges 
+        edges = self.R
+        # make sure that there are no duplicate edges
+        for i in range(len(edges)):
+            for j in range(len(edges)):
+                if edges[i][0] == edges[j][1] and edges[i][1] == edges[j][0]:
+                    return False
+        # make sure that there are no edges that are not in the relation                    
+        for i in range(len(self.M)):
+            for j in range(len(self.M)):
+                if self.M[i][j] == 0:
+                    for k in range(len(edges)):
+                        if edges[k][0] == i+1 and edges[k][1] == j+1:
+                            return False
+                
+        # each node can only have two edges
+        for i in range(len(self.M)):
+            count = 0
+            for j in range(len(self.M)):
+                if self.M[i][j] == 1:
+                    count += 1
+            if count > 2:
+                return False
+                      
+        # must be asymmetric
+        if self.isSymmetric():
+            return False
+            
+        return True
+\end{lstlisting}
+
 
 
 \subsubsection{Equivalence relations}
