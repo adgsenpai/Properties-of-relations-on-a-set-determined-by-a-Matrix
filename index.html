@@ -1,0 +1,248 @@
+<!-- Bootstrap 5 Starter template -->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.17.0a2/full/pyodide.js"></script>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous" />
+
+    <title>Set relations calculator</title>
+</head>
+
+<body>
+    <!-- Generate a form in the center of the page -->
+    <div class="container">
+        <div class="row">
+            <div class="col-4"></div>
+            <h1 class="col-4 text-center">Set relations calculator</h1>
+            <div class="col-10">                
+                    <div class = "mb-3">
+                    <h5> Example: </h5>
+                    <code>
+                    #s = {0,{a},{b},{a,b}}
+                    </code>
+                    <br>
+                    <code>
+                    #R = {(0,{a}),(0,{b}),(0,{a,b}),({a},{b}),({a},{a,b}),({b},{a,b})}
+                    </code>
+                    <br>
+                    <br>
+                    <p>
+                        In the code you must convert the mathematical notion to a list of tuples. For example, the set {a,b} is represented as [0,1] in Python.                   
+                    </p>
+                    <br>
+                    <br>
+                    <code>
+                        s = [1,2,3,4] 
+                        R = [(1, 2), (1, 3), (1, 4), (2, 3), (2, 4), (3, 4)]
+                    </code>
+                    </div>                
+                    <div class="mb-3">
+                        <label for="set1" class="form-label">Elements in set</label>
+                        <input type="text" class="form-control" id="s" placeholder="[1,2,3,4]">
+                    </div>
+                    <div class="mb-3">
+                        <label for="set2" class="form-label">Set</label>
+                        <input type="text" class="form-control" id="R" placeholder="[(1, 2), (1, 3), (1, 4), (2, 3), (2, 4), (3, 4)]">                                                
+                    </div>
+                    <br>
+                    <div id="output"></div>
+                    <button type="submitBtn" id="submit" py-click="renderProperties()"   class="btn btn-primary">Compute</button>      
+                    <button onclick="document.location.href='/main.pdf'" class="btn btn-primary">Mathematical Paper and Explanation</button>
+                    <py-config type="json">
+                        {
+                          "packages": ["numpy"]
+                        }
+                    </py-config>                  
+                    <br>       
+                    <br>                    
+                    <py-script>
+                        import numpy as np
+                        from js import document
+                        from pyodide.ffi.wrappers import add_event_listener
+
+                        class Relations():
+                            def __init__(self, s, R):
+                                self.s = s
+                                self.R = R
+                                self.M = np.zeros((len(s), len(s)))
+                                for i in R:
+                                    self.M[i[0]-1][i[1]-1] = 1
+
+                            def returnMatrix(self):
+                                return self.M
+
+                            def isReflexive(self):
+                                for i in range(len(self.M)):
+                                    if self.M[i][i] == 0:
+                                        return False
+                                return True
+
+                            def isIrreflexive(self):
+                                return not self.isReflexive()
+
+                            def isSymmetric(self):
+                                T = self.M.transpose()
+                                if np.array_equal(T, self.M):
+                                    return True
+                                return False
+
+                            def isAntisymmetric(self):
+                                if self.isSymmetric():
+                                    return False
+                                return True
+
+                            def isTransitive(self):
+                                M = self.M
+                                Msquare = np.dot(M, M)
+                                bFoundOne = False
+                                bFoundTwo = False
+                                # if only two elements are in the relation, then it is transitive (We cannot prove that R is not transitive. Such a proof actually has a special name: it is vacuously true that R is transitive.)
+                                if len(self.R) == 2:
+                                    return True
+
+                                for i in range(len(Msquare)):
+                                    for j in range(len(Msquare)):
+                                        if Msquare[i][j] == 1:
+                                            bFoundOne = True
+                                        if Msquare[j][i] == 2:
+                                            bFoundTwo = True
+                                    if bFoundOne and bFoundTwo:
+                                        return True
+                                return False
+
+                            def isTrichotomy(self):
+                                # every pair of nodes has one and only one edge between them.                 
+                                # each node can only have two edges but 
+                                # if the edge as the node as the source and destination
+                                # , then it is ok
+                                for i in range(len(self.M)):
+                                    count = 0
+                                    for j in range(len(self.M)):
+                                        if self.M[i][j] == 1:
+                                            # if the edge is from the node to itself, then it is ok
+                                            if i == j:
+                                                continue
+                                            else:
+                                                count += 1
+                                    if count > 2:
+                                        return False
+                                # must be asymmetric
+                                if self.isSymmetric():
+                                    return False            
+                                return True
+
+                            def EquivalenceRelation(self):
+                                if self.isReflexive() and self.isSymmetric() and self.isTransitive():
+                                    return True
+                                return False
+
+                            def WeakPartialOrder(self):
+                                if self.isReflexive() and self.isTransitive() and self.isAntisymmetric():
+                                    return True
+                                return False
+
+                            def StrictPartialOrder(self):
+                                if self.isTransitive() and self.isAntisymmetric() and self.isIrreflexive():
+                                    return True
+                                return False
+
+                            def WeakTotalOrder(self):
+                                if self.isReflexive() and self.isTransitive() and self.isTrichotomy():
+                                    return True
+                                return False
+
+                            def StrictTotalOrder(self):
+                                if self.isTransitive() and self.isTrichotomy() and self.isIrreflexive():
+                                    return True
+                                return False
+
+                            def StrictEquivalenceRelation(self):
+                                if self.EquivalenceRelation() and self.isIrreflexive():
+                                    return True
+                                return False
+
+                            def printPropertiesOfRelation(self):
+                                # print only the properties that are true
+                                outputBuffer = ""
+                                if self.isReflexive():
+                                    outputBuffer += "<h6>Reflexive</h6> <br>"
+                                if self.isIrreflexive():
+                                    outputBuffer += "<h6>Irreflexive</h6> <br>"
+                                if self.isSymmetric():
+                                    outputBuffer += "<h6>Symmetric</h6> <br>"
+                                if self.isAntisymmetric():
+                                    outputBuffer += "<h6>Antisymmetric</h6> <br>"
+                                if self.isTransitive():
+                                    outputBuffer += "<h6>Transitive</h6> <br>"                     
+                                if self.isTrichotomy():
+                                    outputBuffer += "<h6>Trichotomy</h6> <br>"
+                                if self.EquivalenceRelation():
+                                    outputBuffer += "<h6>Equivalence Relation</h6> <br>"
+                                if self.StrictEquivalenceRelation():
+                                    outputBuffer += "<h6>Strict Equivalence Relation</h6> <br>"
+                                if self.WeakPartialOrder():
+                                    outputBuffer += "<h6>Weak Partial Order</h6> <br>"
+                                if self.StrictPartialOrder():
+                                    outputBuffer += "<h6>Strict Partial Order</h6> <br>"
+                                if self.WeakTotalOrder():
+                                    outputBuffer += "<h6>Weak Total Order</h6> <br>"
+                                if self.StrictTotalOrder():
+                                    outputBuffer += "<h6>Strict Total Order</h6> <br>"
+                                return outputBuffer
+
+                        def renderProperties():
+                            #get element from id 
+                            import ast 
+                            try:
+                                s = ast.literal_eval(Element('s').element.value)
+                                R = ast.literal_eval(Element('R').element.value)
+                                R = Relations(s, R)
+                                # render the properties of the relation in the output div
+                                Element('output').element.innerHTML = R.printPropertiesOfRelation()                        
+                            except Exception as e:
+                                Element('output').element.innerHTML = '<h6 style="color:red">' + "Error: " + str(e) + '</h6>'
+                    </py-script> 
+            </div>
+            <div class="col-4"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-12">
+                    <div class="col-lg-6 mb-lg-0 mb-4">
+                        <div class="copyright text-center text-sm text-muted text-lg-start">
+                            ©
+                            <script>
+                                document.write(new Date().getFullYear())
+                            </script>, ADGSTUDIOS made with ❤️ by
+                            <a href="https://adgstudios.co.za" class="font-weight-bold" target="_blank">Ashlin Darius
+                                Govindasamy</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+
+
+
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

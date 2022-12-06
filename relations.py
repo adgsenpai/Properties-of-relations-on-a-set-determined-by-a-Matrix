@@ -133,7 +133,7 @@ class Relations():
 #R = {(0,{a}),(0,{b}),(0,{a,b}),({a},{b}),({a},{a,b}),({b},{a,b})}
 
 # since our class uses numerical values, we need to convert the set to a list of numbers and tuples of ordered pairs
-s = [1, 2, 3,4]
+s = [1,2,3,4]
 #    0  a  b  ab
 R = [(1, 2), (1, 3), (1, 4), (2, 3), (2, 4), (3, 4)]
 r1 = Relations(s, R)
