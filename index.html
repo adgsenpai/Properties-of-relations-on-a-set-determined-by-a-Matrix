@@ -105,7 +105,10 @@
                                 return True
 
                             def isIrreflexive(self):
-                                return not self.isReflexive()
+                                for i in range(len(self.M)):
+                                    if self.M[i][i] == 1:
+                                        return False
+                                return True
 
                             def isSymmetric(self):
                                 T = self.M.transpose()
@@ -121,41 +124,23 @@
                             def isTransitive(self):
                                 M = self.M
                                 Msquare = np.dot(M, M)
-                                bFoundOne = False
-                                bFoundTwo = False
-                                # if only two elements are in the relation, then it is transitive (We cannot prove that R is not transitive. Such a proof actually has a special name: it is vacuously true that R is transitive.)
-                                if len(self.R) == 2:
-                                    return True
-
-                                for i in range(len(Msquare)):
-                                    for j in range(len(Msquare)):
+                                #A relation R ⊆ A × A is transitive iff R has the property that for all x, y, z ∈ A, whenever (x, y) ∈ R and (y, z) ∈ R, then (x, z) ∈ R.
+                                for i in range(len(M)):
+                                    for j in range(len(M)):
                                         if Msquare[i][j] == 1:
-                                            bFoundOne = True
-                                        if Msquare[j][i] == 2:
-                                            bFoundTwo = True
-                                    if bFoundOne and bFoundTwo:
-                                        return True
-                                return False
+                                            if M[i][j] == 0:
+                                                return False
+                                return True
 
                             def isTrichotomy(self):
-                                # every pair of nodes has one and only one edge between them.                 
-                                # each node can only have two edges but 
-                                # if the edge as the node as the source and destination
-                                # , then it is ok
+                                #A relation R on A satisfies the requirement for trichotomy iff, for every x and y
+                                #chosen from A such that x ≠ y, we have that x and y are comparable,
+                                #i.e. for all x, y ∈ A such that x ≠ y, x R y or y R x (i.e. (x, y) ∈ R or (y, x) ∈ R).
                                 for i in range(len(self.M)):
-                                    count = 0
                                     for j in range(len(self.M)):
-                                        if self.M[i][j] == 1:
-                                            # if the edge is from the node to itself, then it is ok
-                                            if i == j:
-                                                continue
-                                            else:
-                                                count += 1
-                                    if count > 2:
-                                        return False
-                                # must be asymmetric
-                                if self.isSymmetric():
-                                    return False            
+                                        if i != j:
+                                            if self.M[i][j] == 0 and self.M[j][i] == 0:
+                                                return False
                                 return True
 
                             def EquivalenceRelation(self):
