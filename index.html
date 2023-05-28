@@ -16,22 +16,21 @@
     <link rel="icon" href="./Set_theory_icon.svg.png" type="image/x-icon" />
     <title>Set relations calculator</title>
     <!-- Primary Meta Tags -->
-    <title>Set relations calculator</title>
     <meta name="title" content="Set relations calculator">
-    <meta name="description" content="this website provides a free set properties calculator based on set relations. There is also a paper provided to explain how the calculator works with theory. New methods and techniques have been discovered by Ashlin Darius Govindasamy in this paper.">
+    <meta name="description" content="This website provides a free set properties calculator based on set relations. There is also a paper provided to explain how the calculator works with theory. New methods and techniques have been discovered by Ashlin Darius Govindasamy in this paper.">
 
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://sets.adgstudios.co.za/">
     <meta property="og:title" content="Set relations calculator">
-    <meta property="og:description" content="this website provides a free set properties calculator based on set relations. There is also a paper provided to explain how the calculator works with theory. New methods and techniques have been discovered by Ashlin Darius Govindasamy in this paper.">
+    <meta property="og:description" content="This website provides a free set properties calculator based on set relations. There is also a paper provided to explain how the calculator works with theory. New methods and techniques have been discovered by Ashlin Darius Govindasamy in this paper.">
     <meta property="og:image" content="https://sets.adgstudios.co.za/Set_theory_icon.svg.png">
 
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://sets.adgstudios.co.za/">
     <meta property="twitter:title" content="Set relations calculator">
-    <meta property="twitter:description" content="this website provides a free set properties calculator based on set relations. There is also a paper provided to explain how the calculator works with theory. New methods and techniques have been discovered by Ashlin Darius Govindasamy in this paper.">
+    <meta property="twitter:description" content="This website provides a free set properties calculator based on set relations. There is also a paper provided to explain how the calculator works with theory. New methods and techniques have been discovered by Ashlin Darius Govindasamy in this paper.">
     <meta property="twitter:image" content="https://sets.adgstudios.co.za/Set_theory_icon.svg.png">
 </head>
 
@@ -42,7 +41,7 @@
             <div class="col-4"></div>
             <h1 class="col-4 text-center">Set relations calculator</h1>
             <div class="col-10">                
-                    <div class = "mb-3">
+                    <div class="mb-3">
                     <h5> Example: </h5>
                     <code>
                     #s = {0,{a},{b},{a,b}}
@@ -65,27 +64,21 @@
                     </div>                
                     <div class="mb-3">
                         <label for="set1" class="form-label">Elements in set</label>
-                        <input type="text" class="form-control" id="s" placeholder="[1,2,3,4]">
+                        <input type="text" class="form-control" id="s">
                     </div>
                     <div class="mb-3">
                         <label for="set2" class="form-label">Set</label>
-                        <input type="text" class="form-control" id="R" placeholder="[(1, 2), (1, 3), (1, 4), (2, 3), (2, 4), (3, 4)]">                                                
+                        <input type="text" class="form-control" id="R">                                                
                     </div>
                     <br>
                     <div id="output"></div>
-                    <button type="submitBtn" id="submit" py-click="renderProperties()"   class="btn btn-primary">Compute</button>      
+                    <button type="submitBtn" id="submit" onclick="renderProperties()" class="btn btn-primary">Compute</button>      
                     <button onclick="document.location.href='/main.pdf'" class="btn btn-primary">Mathematical Paper and Explanation</button>
-                    <py-config type="json">
-                        {
-                          "packages": ["numpy"]
-                        }
-                    </py-config>                  
                     <br>       
                     <br>                    
-                    <py-script>
+                    <script type="text/python">
                         import numpy as np
-                        from js import document
-                        from pyodide.ffi.wrappers import add_event_listener
+                        from browser import document, window
 
                         class Relations():
                             def __init__(self, s, R):
@@ -203,17 +196,17 @@
                                 return outputBuffer
 
                         def renderProperties():
-                            #get element from id 
+                            # get element from id 
                             import ast 
                             try:
-                                s = ast.literal_eval(Element('s').element.value)
-                                R = ast.literal_eval(Element('R').element.value)
+                                s = ast.literal_eval(document['s'].value)
+                                R = ast.literal_eval(document['R'].value)
                                 R = Relations(s, R)
                                 # render the properties of the relation in the output div
-                                Element('output').element.innerHTML = R.printPropertiesOfRelation()                        
+                                document['output'].innerHTML = R.printPropertiesOfRelation()                        
                             except Exception as e:
-                                Element('output').element.innerHTML = '<h6 style="color:red">' + "Error: " + str(e) + '</h6>'
-                    </py-script> 
+                                document['output'].innerHTML = '<h6 style="color:red">' + "Error: " + str(e) + '</h6>'
+                    </script> 
             </div>
             <div class="col-4"></div>
         </div>
@@ -241,6 +234,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
         crossorigin="anonymous"></script>
+    <script>
+        pyodide.runPython();
+    </script>
 </body>
 
 </html>
