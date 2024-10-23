@@ -1,242 +1,192 @@
-<!-- Bootstrap 5 Starter template -->
+<!-- Set Relations Calculator with Pure JavaScript, Tailwind CSS, and MathJax for LaTeX -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
-    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.17.0a2/full/pyodide.js"></script>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous" />
-    
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Free online calculator to determine properties of set relations such as reflexivity, symmetry, transitivity, and more." />
+    <meta name="keywords" content="Set Theory, Relations, Calculator, Reflexive, Symmetric, Transitive, Antisymmetric, Partial Order, Total Order, Equivalence Relation, Mathematics, Set Relations Calculator" />
+    <meta name="author" content="Ashlin Darius Govindasamy" />
+    <meta property="og:title" content="Set Relations Calculator | Determine Set Relation Properties" />
+    <meta property="og:description" content="Free online calculator to determine properties of set relations such as reflexivity, symmetry, transitivity, and more." />
+    <meta property="og:url" content="https://sets.adgstudios.co.za/" />
+    <meta property="og:image" content="https://sets.adgstudios.co.za/Set_theory_icon.svg.png" />
+
+    <title>Set Relations Calculator</title>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- MathJax for LaTeX rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-AMS_HTML"></script>
+
+    <!-- Favicon -->
     <link rel="icon" href="./Set_theory_icon.svg.png" type="image/x-icon" />
-    <title>Set relations calculator</title>
-    <!-- Primary Meta Tags -->
-    <meta name="title" content="Set relations calculator">
-    <meta name="description" content="This website provides a free set properties calculator based on set relations. There is also a paper provided to explain how the calculator works with theory. New methods and techniques have been discovered by Ashlin Darius Govindasamy in this paper.">
-
-    <!-- Open Graph / Facebook -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://sets.adgstudios.co.za/">
-    <meta property="og:title" content="Set relations calculator">
-    <meta property="og:description" content="This website provides a free set properties calculator based on set relations. There is also a paper provided to explain how the calculator works with theory. New methods and techniques have been discovered by Ashlin Darius Govindasamy in this paper.">
-    <meta property="og:image" content="https://sets.adgstudios.co.za/Set_theory_icon.svg.png">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://sets.adgstudios.co.za/">
-    <meta property="twitter:title" content="Set relations calculator">
-    <meta property="twitter:description" content="This website provides a free set properties calculator based on set relations. There is also a paper provided to explain how the calculator works with theory. New methods and techniques have been discovered by Ashlin Darius Govindasamy in this paper.">
-    <meta property="twitter:image" content="https://sets.adgstudios.co.za/Set_theory_icon.svg.png">
 </head>
 
-<body>
-    <!-- Generate a form in the center of the page -->
-    <div class="container">
-        <div class="row">
-            <div class="col-4"></div>
-            <h1 class="col-4 text-center">Set relations calculator</h1>
-            <div class="col-10">                
-                    <div class="mb-3">
-                    <h5> Example: </h5>
-                    <code>
-                    #s = {0,{a},{b},{a,b}}
-                    </code>
-                    <br>
-                    <code>
-                    #R = {(0,{a}),(0,{b}),(0,{a,b}),({a},{b}),({a},{a,b}),({b},{a,b})}
-                    </code>
-                    <br>
-                    <br>
-                    <p>
-                        In the code you must convert the mathematical notion to a list of tuples. For example, the set {a,b} is represented as [0,1] in Python.                   
-                    </p>
-                    <br>
-                    <br>
-                    <code>
-                        s = [1,2,3,4] 
-                        R = [(1, 2), (1, 3), (1, 4), (2, 3), (2, 4), (3, 4)]
-                    </code>
-                    </div>                
-                    <div class="mb-3">
-                        <label for="set1" class="form-label">Elements in set</label>
-                        <input type="text" class="form-control" id="s">
-                    </div>
-                    <div class="mb-3">
-                        <label for="set2" class="form-label">Set</label>
-                        <input type="text" class="form-control" id="R">                                                
-                    </div>
-                    <br>
-                    <div id="output"></div>
-                    <button type="submitBtn" id="submit" onclick="renderProperties()" class="btn btn-primary">Compute</button>      
-                    <button onclick="document.location.href='/main.pdf'" class="btn btn-primary">Mathematical Paper and Explanation</button>
-                    <br>       
-                    <br>                    
-                    <script type="text/python">
-                        import numpy as np
-                        from browser import document, window
+<body class="bg-gray-100 text-gray-900">
 
-                        class Relations():
-                            def __init__(self, s, R):
-                                self.s = s
-                                self.R = R
-                                self.M = np.zeros((len(s), len(s)))
-                                for i in R:
-                                    self.M[i[0]-1][i[1]-1] = 1
+    <div class="container mx-auto p-5">
+        <h1 class="text-4xl font-bold text-center mb-8">Set Relations Calculator</h1>
+        <p class="text-center text-lg mb-8">Determine the properties of set relations such as reflexivity, symmetry, transitivity, and more.</p>
 
-                            def returnMatrix(self):
-                                return self.M
-
-                            def isReflexive(self):
-                                for i in range(len(self.M)):
-                                    if self.M[i][i] == 0:
-                                        return False
-                                return True
-
-                            def isIrreflexive(self):
-                                for i in range(len(self.M)):
-                                    if self.M[i][i] == 1:
-                                        return False
-                                return True
-
-                            def isSymmetric(self):
-                                T = self.M.transpose()
-                                if np.array_equal(T, self.M):
-                                    return True
-                                return False
-
-                            def isAntisymmetric(self):
-                                if self.isSymmetric():
-                                    return False
-                                return True
-
-                            def isTransitive(self):
-                                M = self.M
-                                Msquare = np.dot(M, M)
-                                #A relation R ⊆ A × A is transitive iff R has the property that for all x, y, z ∈ A, whenever (x, y) ∈ R and (y, z) ∈ R, then (x, z) ∈ R.
-                                for i in range(len(M)):
-                                    for j in range(len(M)):
-                                        if Msquare[i][j] == 1:
-                                            if M[i][j] == 0:
-                                                return False
-                                return True
-
-                            def isTrichotomy(self):
-                                #A relation R on A satisfies the requirement for trichotomy iff, for every x and y
-                                #chosen from A such that x ≠ y, we have that x and y are comparable,
-                                #i.e. for all x, y ∈ A such that x ≠ y, x R y or y R x (i.e. (x, y) ∈ R or (y, x) ∈ R).
-                                for i in range(len(self.M)):
-                                    for j in range(len(self.M)):
-                                        if i != j:
-                                            if self.M[i][j] == 0 and self.M[j][i] == 0:
-                                                return False
-                                return True
-
-                            def EquivalenceRelation(self):
-                                if self.isReflexive() and self.isSymmetric() and self.isTransitive():
-                                    return True
-                                return False
-
-                            def WeakPartialOrder(self):
-                                if self.isReflexive() and self.isTransitive() and self.isAntisymmetric():
-                                    return True
-                                return False
-
-                            def StrictPartialOrder(self):
-                                if self.isTransitive() and self.isAntisymmetric() and self.isIrreflexive():
-                                    return True
-                                return False
-
-                            def WeakTotalOrder(self):
-                                if self.isReflexive() and self.isTransitive() and self.isTrichotomy():
-                                    return True
-                                return False
-
-                            def StrictTotalOrder(self):
-                                if self.isTransitive() and self.isTrichotomy() and self.isIrreflexive():
-                                    return True
-                                return False
-
-                            def StrictEquivalenceRelation(self):
-                                if self.EquivalenceRelation() and self.isIrreflexive():
-                                    return True
-                                return False
-
-                            def printPropertiesOfRelation(self):
-                                # print only the properties that are true
-                                outputBuffer = ""
-                                if self.isReflexive():
-                                    outputBuffer += "<h6>Reflexive</h6> <br>"
-                                if self.isIrreflexive():
-                                    outputBuffer += "<h6>Irreflexive</h6> <br>"
-                                if self.isSymmetric():
-                                    outputBuffer += "<h6>Symmetric</h6> <br>"
-                                if self.isAntisymmetric():
-                                    outputBuffer += "<h6>Antisymmetric</h6> <br>"
-                                if self.isTransitive():
-                                    outputBuffer += "<h6>Transitive</h6> <br>"                     
-                                if self.isTrichotomy():
-                                    outputBuffer += "<h6>Trichotomy</h6> <br>"
-                                if self.EquivalenceRelation():
-                                    outputBuffer += "<h6>Equivalence Relation</h6> <br>"
-                                if self.StrictEquivalenceRelation():
-                                    outputBuffer += "<h6>Strict Equivalence Relation</h6> <br>"
-                                if self.WeakPartialOrder():
-                                    outputBuffer += "<h6>Weak Partial Order</h6> <br>"
-                                if self.StrictPartialOrder():
-                                    outputBuffer += "<h6>Strict Partial Order</h6> <br>"
-                                if self.WeakTotalOrder():
-                                    outputBuffer += "<h6>Weak Total Order</h6> <br>"
-                                if self.StrictTotalOrder():
-                                    outputBuffer += "<h6>Strict Total Order</h6> <br>"
-                                return outputBuffer
-
-                        def renderProperties():
-                            # get element from id 
-                            import ast 
-                            try:
-                                s = ast.literal_eval(document['s'].value)
-                                R = ast.literal_eval(document['R'].value)
-                                R = Relations(s, R)
-                                # render the properties of the relation in the output div
-                                document['output'].innerHTML = R.printPropertiesOfRelation()                        
-                            except Exception as e:
-                                document['output'].innerHTML = '<h6 style="color:red">' + "Error: " + str(e) + '</h6>'
-                    </script> 
-            </div>
-            <div class="col-4"></div>
+        <!-- Mathematical Examples Section -->
+        <div class="mb-8">
+            <h2 class="text-xl font-semibold mb-3">Mathematical Notation Examples:</h2>
+            <p class="text-sm text-gray-600 mt-2">
+                The set <span class="font-bold">S</span> can be defined as:
+                $$ S = \{1, 2, 3, 4\} $$
+            </p>
+            <p class="text-sm text-gray-600 mt-2">
+                The relation <span class="font-bold">R</span> can be expressed as:
+                $$ R = \{(1, 2), (1, 3), (2, 4), (3, 4)\} $$
+            </p>
+            <p class="text-sm text-gray-600 mt-2">
+                A relation is reflexive if:
+                $$ \forall a \in S, \ (a, a) \in R $$
+            </p>
+            <p class="text-sm text-gray-600 mt-2">
+                A relation is symmetric if:
+                $$ \forall a, b \in S, \ (a, b) \in R \implies (b, a) \in R $$
+            </p>
+            <p class="text-sm text-gray-600 mt-2">
+                A relation is transitive if:
+                $$ \forall a, b, c \in S, \ (a, b) \in R \text{ and } (b, c) \in R \implies (a, c) \in R $$
+            </p>
         </div>
+
+        <!-- Input Form -->
+        <div class="mb-6">
+            <label for="s" class="block mb-2 text-lg">Elements in Set (s)</label>
+            <input type="text" id="s" class="border rounded w-full p-2" placeholder="e.g., [1, 2, 3, 4]">
+        </div>
+        <div class="mb-6">
+            <label for="R" class="block mb-2 text-lg">Relations (R)</label>
+            <input type="text" id="R" class="border rounded w-full p-2" placeholder="e.g., [[1, 2], [1, 3], [1, 4], [2, 3], [2, 4], [3, 4]]">
+        </div>
+
+        <div id="output" class="mb-6"></div>
+
+        <button class="bg-blue-500 text-white py-2 px-4 rounded" onclick="renderProperties()">Compute</button>
+        <a href="/main.pdf" class="ml-4 text-blue-500 hover:text-blue-700">Mathematical Paper and Explanation</a>
     </div>
 
-    <footer class="footer">
-        <div class="container">
-            <div class="row">
-                <div class="col-12">
-                    <div class="col-lg-6 mb-lg-0 mb-4">
-                        <div class="copyright text-center text-sm text-muted text-lg-start">
-                            ©
-                            <script>
-                                document.write(new Date().getFullYear())
-                            </script>, ADGSTUDIOS made with ❤️ by
-                            <a href="https://adgstudios.co.za" class="font-weight-bold" target="_blank">Ashlin Darius
-                                Govindasamy</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <!-- JavaScript Logic for Relations -->
+    <script>
+        class Relations {
+            constructor(s, R) {
+                this.s = s;
+                this.R = R;
+                this.M = this.generateMatrix();
+            }
+
+            generateMatrix() {
+                const matrix = Array(this.s.length).fill(null).map(() => Array(this.s.length).fill(0));
+                for (let [a, b] of this.R) {
+                    matrix[a - 1][b - 1] = 1;
+                }
+                return matrix;
+            }
+
+            isReflexive() {
+                for (let i = 0; i < this.M.length; i++) {
+                    if (this.M[i][i] === 0) return false;
+                }
+                return true;
+            }
+
+            isIrreflexive() {
+                for (let i = 0; i < this.M.length; i++) {
+                    if (this.M[i][i] === 1) return false;
+                }
+                return true;
+            }
+
+            isSymmetric() {
+                for (let i = 0; i < this.M.length; i++) {
+                    for (let j = 0; j < this.M.length; j++) {
+                        if (this.M[i][j] !== this.M[j][i]) return false;
+                    }
+                }
+                return true;
+            }
+
+            isAntisymmetric() {
+                for (let i = 0; i < this.M.length; i++) {
+                    for (let j = 0; j < this.M.length; j++) {
+                        if (i !== j && this.M[i][j] === 1 && this.M[j][i] === 1) return false;
+                    }
+                }
+                return true;
+            }
+
+            isTransitive() {
+                const n = this.M.length;
+                for (let i = 0; i < n; i++) {
+                    for (let j = 0; j < n; j++) {
+                        if (this.M[i][j] === 1) {
+                            for (let k = 0; k < n; k++) {
+                                if (this.M[j][k] === 1 && this.M[i][k] === 0) return false;
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+
+            isTrichotomy() {
+                const n = this.M.length;
+                for (let i = 0; i < n; i++) {
+                    for (let j = 0; j < n; j++) {
+                        if (i !== j && this.M[i][j] + this.M[j][i] !== 1) return false;
+                    }
+                }
+                return true;
+            }
+
+            printProperties() {
+                const properties = [];
+                if (this.isReflexive()) properties.push("Reflexive");
+                if (this.isIrreflexive()) properties.push("Irreflexive");
+                if (this.isSymmetric()) properties.push("Symmetric");
+                if (this.isAntisymmetric()) properties.push("Antisymmetric");
+                if (this.isTransitive()) properties.push("Transitive");
+                if (this.isTrichotomy()) properties.push("Trichotomy");
+                return properties;
+            }
+        }
+
+        function renderProperties() {
+            try {
+                const s = JSON.parse(document.getElementById('s').value);
+                const R = JSON.parse(document.getElementById('R').value);
+                const relation = new Relations(s, R);
+                const properties = relation.printProperties();
+
+                let outputHTML = '<h5 class="text-lg font-bold mb-3">Properties of the Relation:</h5><ul class="list-disc pl-5">';
+                properties.forEach(prop => {
+                    outputHTML += `<li>${prop}</li>`;
+                });
+                outputHTML += '</ul>';
+                document.getElementById('output').innerHTML = outputHTML;
+            } catch (error) {
+                document.getElementById('output').innerHTML = `<p class="text-red-500">Error: ${error.message}</p>`;
+            }
+        }
+
+        // Render MathJax to display LaTeX math after page load
+        window.onload = function () {
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        };
+    </script>
+
+    <!-- Footer -->
+    <footer class="mt-10 text-center text-gray-600">
+        &copy; <script>document.write(new Date().getFullYear())</script>, ADGSTUDIOS made with ❤️ by
+        <a href="https://adgstudios.co.za" class="font-bold text-blue-500 hover:text-blue-700">Ashlin Darius Govindasamy</a>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW"
-        crossorigin="anonymous"></script>
-    <script>
-        pyodide.runPython();
-    </script>
 </body>
 
 </html>
